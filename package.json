@@ -1,0 +1,23 @@
+{
+  "name": "augmented_learning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marioacc/Augmented-Learning-Web-App.git"
+  },
+  "author": "marioacc and carla08",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marioacc/Augmented-Learning-Web-App/issues"
+  },
+  "homepage": "https://github.com/marioacc/Augmented-Learning-Web-App#readme",
+  "devDependencies": {
+    "angular": "^1.4.7",
+    "express": "^4.13.3"
+  }
+}
