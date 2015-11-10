@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "AugmentedLearning",
   "version": "0.0.0",
   "private": true,
@@ -14,6 +15,14 @@
     "morgan": "~1.6.1",
     "angular": "^1.4.7",
     "serve-favicon": "~2.3.0"
+=======
+  "name": "augmented_learning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+>>>>>>> 0f2e9a4312887c1c8b0338c89232860ae06037ef
   },
   "repository": {
     "type": "git",
@@ -25,4 +34,11 @@
     "url": "https://github.com/marioacc/Augmented-Learning-Web-App/issues"
   },
   "homepage": "https://github.com/marioacc/Augmented-Learning-Web-App#readme",
+<<<<<<< HEAD
+=======
+  "devDependencies": {
+    "angular": "^1.4.7",
+    "express": "^4.13.3"
+  }
+>>>>>>> 0f2e9a4312887c1c8b0338c89232860ae06037ef
 }
