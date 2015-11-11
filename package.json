@@ -2,7 +2,7 @@
   "name": "AugmentedLearning",
   "version": "0.0.0",
   "private": true,
-  "main":"app.js",
+  "main": "app.js",
   "scripts": {
     "start": "node ./bin/www"
   },
@@ -25,4 +25,10 @@
     "url": "https://github.com/marioacc/Augmented-Learning-Web-App/issues"
   },
   "homepage": "https://github.com/marioacc/Augmented-Learning-Web-App#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-nodemon": "^2.0.4",
+    "jade": "^1.11.0",
+    "parse": "^1.6.9"
+  }
 }
