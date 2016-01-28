@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/marioacc/Augmented-Learning-Web-App#readme",
   "devDependencies": {
+    "express-session": "^1.12.1",
     "gulp": "^3.9.0",
     "gulp-nodemon": "^2.0.4",
     "jade": "^1.11.0",

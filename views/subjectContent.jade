@@ -1,0 +1,28 @@
+doctype(html5) 
+html(ng-app)
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href="/stylesheets/skeleton.css")
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js")
+    script(src="/javascripts/controller.js")
+  body
+    form(action="/subjects/new" method="get")
+      h1 Nuevo Contenido
+      label(for="name") Nombre
+      input(type="text" name="name")
+      label(for="url") url
+      input(type="text" name="url")
+      input(type="hidden" value=contents[0].get("subject").id name="subject" )
+      input(type="submit" value="Agregar")
+    form(action="subjects/"+contents[0].get('subject').id+"/pointer/new" method="post")
+      h1 Seleccionar un pointer
+      select(name="pointer")
+        option Seleccionar un puntero
+        for content in contents
+          option(value=content.id) #{content.get("name")}
+      input(type="submit" value="Agregar")
+    div 
+      each content in contents
+        p !{content.get("name")}
+        a(href=content.get("content")) Contenido

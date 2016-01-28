@@ -1,0 +1,29 @@
+body {
+  background-image: url("../../img/background.png");
+  background-size: cover; }
+
+form {
+  box-shadow: 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.5);
+  text-align: center;
+  border-radius: 1.5em;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.5);
+  border-width: thin;
+  background-color: white;
+  margin-top: 5em;
+  height: 25em;
+  min-width: 23em; }
+  form > div {
+    padding-left: 4em;
+    padding-right: 4em; }
+  form label {
+    text-align: left; }
+  form .logo, form label, form button {
+    margin-top: 2em; }
+  form button {
+    background-color: #809E3D;
+    color: white; }
+    form button:hover {
+      color: white; }
+
+/*# sourceMappingURL=login.css.map */

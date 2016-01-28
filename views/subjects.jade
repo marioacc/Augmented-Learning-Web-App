@@ -1,0 +1,14 @@
+doctype(html5) 
+html(ng-app)
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href="/stylesheets/skeleton.css")
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js")
+    script(src="/javascripts/controller.js")
+  body
+    each element in subjectsByGroup
+      p !{element.subject.get("name")}
+      p !{element.group.get("name")}
+      a(href= 'subjects/#{element.subject.id}') link
+include ./html/subjects.html

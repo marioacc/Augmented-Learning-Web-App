@@ -1,1 +1,15 @@
-include ./html/index.html
+doctype(html5)
+html
+  head
+    link(rel="stylesheet", href="css/normalize.css")
+    link(rel="stylesheet", href="css/skeleton.css")
+    link(rel="stylesheet", href="css/sass/login.css")
+  body(class="container")
+    form(action="/login" ,method="post", class="four columns offset-by-four columns ")
+      div
+        img(src="img/logo.png", class="logo ")
+        label(for="username" class="u-max-full-width") Usuario
+        input(type="text" name="username" class="u-max-full-width")
+        label(for="password") Contraseña
+        input(type="password" name="password" class="u-max-full-width")
+        button(type="submit" value="submit" class="row u-max-full-width ") Ingresar

@@ -5,5 +5,14 @@ gulp.task('start', function () {
     script: 'app.js'
   , ext: 'js html jade'
   , env: { 'NODE_ENV': 'development' }
-  })
-})
+  });
+});
+
+gulp.task('debug', function () {
+  nodemon({
+    exec: 'node-inspector & nodemon --debug app.js'
+  , script: 'app.js'
+  , ext: 'js html jade'
+  , env: { 'NODE_ENV': 'development' }
+  });
+});

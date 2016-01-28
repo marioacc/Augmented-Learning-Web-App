@@ -1,0 +1,11 @@
+doctype(html5) 
+html(ng-app)
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js")
+    script(src="/javascripts/controller.js")
+  body
+    p Materia: #{subject.subject.get("name")}
+    p Grupo: !{subject.group.get("name")}
+    
