@@ -8,6 +8,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var subjects = require("./routes/subjects");
 var session= require("express-session");
+var passport = require('passport');
 var app = express();
 
 
@@ -27,7 +28,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret:"hshshshshs",resave:true, saveUninitialized:false, name:"token", maxAge: null}));
-
 
 //Routes
 app.all("*", routes);
