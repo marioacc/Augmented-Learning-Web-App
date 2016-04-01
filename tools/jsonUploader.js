@@ -25,7 +25,7 @@ var jsonToUpload= {
 	}],
 	"subject": [{
 		"name": "geography",
-		"groupId": ""
+		"group": ""
 	}],
 	"content": [{
 		"name": "Contenido de ejemplo",
@@ -33,7 +33,7 @@ var jsonToUpload= {
 		"subjectId": ""
 	}],
 	"pointer": [{
-		"contentId": ""
+		"content": ""
 	}]
 };
 

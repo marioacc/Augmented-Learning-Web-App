@@ -1,8 +1,18 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.nav-wrapper .brand-logo img {
+  height: 64px;
+
 }
 
-a {
-  color: #00B7FF;
+
+
+
+.navbar-fixed{
+  margin-bottom: 2em;
+}
+.card-image > img {
+  object-fit: cover;
+}
+
+.card .card-image .card-title{
+  color:black;
 }

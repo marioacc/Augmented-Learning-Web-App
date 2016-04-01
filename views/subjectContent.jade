@@ -1,28 +1,53 @@
-doctype(html5) 
-html(ng-app)
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel="stylesheet", href="/stylesheets/skeleton.css")
-    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js")
-    script(src="/javascripts/controller.js")
-  body
-    form(action="/subjects/new" method="get")
-      h1 Nuevo Contenido
-      label(for="name") Nombre
-      input(type="text" name="name")
-      label(for="url") url
-      input(type="text" name="url")
-      input(type="hidden" value=contents[0].get("subject").id name="subject" )
-      input(type="submit" value="Agregar")
-    form(action="subjects/"+contents[0].get('subject').id+"/pointer/new" method="post")
-      h1 Seleccionar un pointer
-      select(name="pointer")
-        option Seleccionar un puntero
-        for content in contents
-          option(value=content.id) #{content.get("name")}
-      input(type="submit" value="Agregar")
-    div 
-      each content in contents
-        p !{content.get("name")}
-        a(href=content.get("content")) Contenido
+include header
+    body
+      include navbar.jade
+      .container-fluid
+        .row
+          div(class="col s6 m4 l2")
+            a(class="waves-effect waves-light btn modal-trigger " href="#modalNewContent ") Agregar Contenido
+          div(class="col s6 m4 l3")
+            a(class="waves-effect waves-light btn modal-trigger " href="#modalSelectPointer ") Seleccionar un Pointer
+          div(class="fixed-action-btn horizontal click-to-toggle" style="bottom: 45px; right: 24px;")
+            a(class="btn-floating btn-large red modal-trigger" href="#modalNewContent")
+              i(class="large material-icons") library_add
+        .row
+          each content in contentList
+            div(class="col s12 m6 l3")
+              div(class="card small")
+                .card-image
+                  img(class="img-responsive" src=content.contentData.content)
+                  span(class="card-title") !{content.contentData.name}
+                .card-content
+                  p !{content.contentData.description}
+                .card-action
+                  a(href="/content/edit?contentId="+content.contentId+"&subjectId="+subjectId)
+                    i(class="fa fa-pencil-square-o small")
+                  a(href=content.contentData.content target="_blank")
+                    i(class="material-icons") open_in_new
+                  a(href="/content/delete?contentId="+content.contentId+"&subjectId="+subjectId)
+                    i(class="material-icons") delete
+
+
+
+          include newContent.jade
+          include selectPointer.jade
+          script(src="https://code.jquery.com/jquery-2.1.1.min.js")
+          script(src="/js/materialize.min.js")
+          script.
+            $(document).ready(function () {
+              $(".button-collapse").sideNav();
+              $('.modal-trigger').leanModal({
+                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                        opacity: .5, // Opacity of modal background
+                        in_duration: 200, // Transition in duration
+                        out_duration: 200, // Transition out duration
+                        ready: function () {
+
+                        }, // Callback for Modal open
+                        complete: function () {
+
+                        } // Callback for Modal close
+                      }
+              );
+              $('select').material_select();
+            })

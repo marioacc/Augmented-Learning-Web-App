@@ -1,0 +1,17 @@
+//
+   Created by mario on 3/19/2016.
+
+
+div(id="modalSelectPointer" class="modal")
+    div(class="modal-content")
+        .row
+            form(action="/pointer/new/"+subjectId method="post")
+                div(class="input-field col s12")
+                    select(value="" name="contentId" class="")
+                        option(disabled selected) Seleccionar un puntero
+                        each content in contentList
+                            option(value=content.contentId) #{content.contentData.name}
+                    label Contenido
+                button(class="btn waves-effect waves-light" type="submit" name="action") Seleccionar
+                    i(class="material-icons right") send
+

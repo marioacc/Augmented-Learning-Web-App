@@ -1,84 +1,128 @@
 "use strict";
 var express = require('express');
 var router =  express.Router();
-var Parse = require('parse/node');
-
-Parse.initialize("4HcBQOSAIv2T16oGe4jXxmybv3y9Zcio6m1ddebv","aenPoo5zyX6IJY3KuhyxHMDC5a9LmgaI7bNurtXR");
-console.log("At subjects.js file");
-/* GET all the subjects. */
+var Firebase = require("firebase");
+var ref = new Firebase("https://popping-fire-7321.firebaseio.com/");
+var userRef= ref.child("user");
 router.get('/', function(req, res, next) {
-  res.send("subjects section");
-//   console.log("In subjects section");
-//   var subject= Parse.Object.extend("Subject");
-//   var group= Parse.Object.extend("Group");
-//   var teacherSubjects =new Parse.Query(subject);
-//   var teacherGroups = new Parse.Query(group);
-//   var subjectsByGroup=[];
-//   teacherGroups.containedIn("name", Parse.User.current().get("Groups"));
-//   teacherGroups.find().then( function (groups) {
-//     teacherSubjects.containedIn("Group", groups);
-//     teacherSubjects.each(function(subjectElement){
-//       groups.forEach(function(groupElement){
-//         if (subjectElement.get("Group").id === groupElement.id){
-//           subjectsByGroup.push({
-//             subject: subjectElement,
-//             group: groupElement
-//           });
-//         }
-//       });
-//       res.render("subjects",{subjectsByGroup});
-//     });
-//     }, function(error){
-//   });
-// });
-//
-// router.get("/new", function (req, res, next){
-//   var name=req.query.name;
-//   var url=req.query.url;
-//   var subjectId=req.query.subject;
-//
-//   var SubjectContent = Parse.Object.extend("SubjectContent");
-//   var Subject = Parse.Object.extend("Subject");
-//   var subjectsQuery = new Parse.Query(Subject);
-//   var subjectContent = new SubjectContent();
-//   subjectsQuery.get(subjectId).then(function(subject){
-//     subjectContent.set("name", name);
-//     subjectContent.set("content", url);
-//     subjectContent.set("subject", subject);
-//     subjectContent.save().then( function(subjectContent){
-//       res.redirect("/subjects/"+subjectId);
-//     }, function (error){
-//         console.log(error.message) ;
-//     });
-//   }, function(error){
-//     console.log(eror.message);
-//   });
+  userRef.child(ref.getAuth().uid).once("value", function(snapshot){
+    var User =snapshot.val();
+
+    var subjectRef=  ref.child("subject");
+    subjectRef.once("value", function(snapshot){
+      var subjects = snapshot.val();
+      var groupRef = ref.child("group");
+      var teacherSubjects=[];
+      for (var property in User.subjects){
+        if (User.subjects.hasOwnProperty(property)){
+          teacherSubjects.push({
+            id:User.subjects[property],
+            name:subjects[User.subjects[property]].name,
+            group: subjects[User.subjects[property]].group
+          });
+        }
+      }
+
+      groupRef.once("value", function(snapshot){
+        var groups=snapshot.val();
+        var groupList=[];
+        var groupsBySubject=[];
+        if (teacherSubjects.length>0){
+          for(var property in teacherSubjects){
+            if (teacherSubjects.hasOwnProperty(property)){
+              groupsBySubject.push(
+                {
+                  group:groups[teacherSubjects[property].group],
+                  subjectId:teacherSubjects[property].id,
+                  subject:teacherSubjects[property]
+
+                }
+              );
+            }
+          }
+        }
+        //Get all the groups to create new content and related
+        //it to a group
+        for (var groupId in groups) {
+          if (groups.hasOwnProperty(groupId)) {
+            groupList.push({
+              groupData: groups[groupId],
+              groupId: groupId
+            });
+          }
+        }
+
+        res.render("subjects", {
+          subjectsByGroup:groupsBySubject,
+          groups:groupList,
+          userId: ref.getAuth().uid.toString()
+        });
+      });
+
+    });
+  });
+
 });
 
 router.get("/:subjectId", function(req,res,next){
-  var subject= Parse.Object.extend("Subject");
-  var subjects = new Parse.Query(subject);
-  var subjectId= req.params.subjectId;
-  var sub;
-  // console.log("Subject Id ------>"+subjectId);
-  subjects.get(subjectId).then( function (subject){
-    var groupId = subject.get("Group").id;
-    var group = Parse.Object.extend("Group");
-    var groups = new Parse.Query(group);
-    return groups.get(groupId);
-  }).then(function (group){
-    // console.log(JSON.stringify(subject));
-    var subjectContents =  Parse.Object.extend("SubjectContent");
-    var subjectContent = new Parse.Query(subjectContents);
-    subjectContent.equalTo("subject",subject).find().then(function (content){
-      // console.log(JSON.stringify(content[0]));
-      res.render("subjectContent", {contents:content});
-
-    })
-    // res.render("subjectId",{subject});
-  }, function (error){
-    res.send(error.message);
+  var subjectId=req.params.subjectId;
+  var subjectRef= ref.child("subject").child(subjectId);
+  var contentRef= ref.child("content");
+  var subjectData;
+  subjectRef.once("value", function (snapshot){
+    subjectData = snapshot.val();
+    contentRef.once("value", function (snapshot) {
+      var contentList=[];
+      var contentData= snapshot.val();
+      for (var contentId in contentData){
+        if(contentData.hasOwnProperty(contentId)){
+          if (contentData[contentId].subject === subjectId){
+            contentList.push({
+              contentData:contentData[contentId],
+              contentId:contentId
+            });
+          }
+        }
+      }
+      res.render("subjectContent",{
+        contentList:contentList,
+        subjectId: subjectId
+      });
+    });
   });
+});
+
+router.post("/new/:userId", function(req,res,next){
+  var userId= req.params.userId;
+  var subjectName= req.body.name;
+  var subjectGroupId= req.body.groupId;
+  var userRef= ref.child("user").child(userId);
+  var userSubjectsRef= ref.child("user").child(userId).child("subjects");
+  var subjectsRef= ref.child("subject");
+  var newSubjectRef=subjectsRef.push({
+    name: subjectName,
+    group: subjectGroupId
+  });
+
+  userSubjectsRef.once("value").then(function(snapshot){
+   var subjectsList=snapshot.val() || [];
+    if(subjectsList.length>0){
+      subjectsList.push(newSubjectRef.key());
+      userRef.update({
+        subjects:subjectsList
+      });
+    }else{
+      subjectsList.push(newSubjectRef.key());
+      userRef.update({
+        subjects:subjectsList
+      })
+    }
+
+    res.redirect("/subject");
+  }, function (error){
+    console.log(error.message);
+  });
+
 });
 
 module.exports = router;
