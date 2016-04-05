@@ -45,6 +45,7 @@ router.post("/login", function(req, res, next){
     if (error) {
       res.send(JSON.stringify(error));
     } else {
+
         userIdRef=userRef.child(authData.uid);
         userIdRef.once("value", function (userData){
         req.app.set("user",JSON.stringify(userData.val()));
