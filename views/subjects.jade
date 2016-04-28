@@ -19,7 +19,7 @@ html(ng-app)
       .row
         each element in subjectsByGroup
           div(class="col s6 m4 l3")
-            a(href= 'subject/#{element.subjectId}' class="btn-large waves-effect waves-light hoverable") !{element.subject.name+"\n"+element.group.group }
+            a(href= 'theme/#{element.subjectId}' class="btn-large waves-effect waves-light hoverable") !{element.subject.name+"\n"+element.group.group }
 
 
     include newSubject

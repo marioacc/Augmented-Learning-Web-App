@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var busboy = require('connect-busboy');
 
 //Routes
 var routes = require('./routes/index');
@@ -11,6 +12,7 @@ var users = require('./routes/users');
 var subjects = require("./routes/subjects");
 var pointers= require("./routes/pointers");
 var contents= require("./routes/contents");
+var themes= require ("./routes/themes");
 
 var session= require("express-session");
 var passport = require('passport');
@@ -33,10 +35,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(session({secret:"hshshshshs",resave:true, saveUninitialized:false, name:"token", maxAge: null}));
-
+app.use(busboy());
 //Routes
 app.all("*", routes);
 app.use('/subject',subjects);
+app.use("/theme",themes);
 app.use('/pointer', pointers);
 app.use("/content",contents);
 

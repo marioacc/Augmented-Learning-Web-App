@@ -1,0 +1,17 @@
+//
+   Created by mario on 4/27/2016.
+div(id="modalNewTheme" class="modal")
+    div(class="modal-content")
+        .row
+            form(action="/theme/"+subjectId method="post" enctype="multipart/form-data" class="col s12")
+                h5 Subir temas
+                .row
+                    .file-field.input-field
+                        .btn
+                            span Archivo CSV
+                            input(type="file" name="file")
+                        .file-path-wrapper
+                            input.file-path.validate(type="text")
+                button(class="btn waves-effect waves-light" type="submit" name="action") Subir Archivo CSV
+                    i(class="material-icons right") send
+
