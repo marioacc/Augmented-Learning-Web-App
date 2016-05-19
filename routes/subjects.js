@@ -52,7 +52,7 @@ router.get('/', function(req, res, next) {
           }
         }
 
-        res.render("subjects", {
+        res.render("subjects/subjects", {
           subjectsByGroup:groupsBySubject,
           groups:groupList,
           userId: ref.getAuth().uid.toString()
@@ -84,7 +84,7 @@ router.get("/:subjectId", function(req,res,next){
           }
         }
       }
-      res.render("subjectContent",{
+      res.render("subjects/subjectContent",{
         contentList:contentList,
         subjectId: subjectId
       });
@@ -118,7 +118,7 @@ router.post("/new/:userId", function(req,res,next){
       })
     }
 
-    res.redirect("/subject");
+    res.redirect("subjects/subject");
   }, function (error){
     console.log(error.message);
   });

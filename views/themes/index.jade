@@ -1,38 +1,22 @@
-//
-   Created by mario on 4/18/2016.
-doctype(html5)
-html
-    head
-        meta(charset="utf-8")
-        meta(http-equiv="X-UA-Compatible", content="IE=edge")
-
-        meta(name="viewport" content="width=device-width", initial-scale=1.0)
-        //link(rel="stylesheet", href="css/normalize.css")
-        link(href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
-        link(rel="stylesheet", href="/css/materialize.min.css", media="screen,projection")
-        link(rel="stylesheet", href="/css/style.css")
-
-    body
-        include ../navbar
-
-        .container-fluid
-            div(class="fixed-action-btn horizontal click-to-toggle" style="bottom: 45px; right: 24px;")
-                a(class="btn-floating btn-large red modal-trigger" href="#modalNewTheme")
-                    i(class="large material-icons") playlist_add
-            .row
-                div(class="col s12")
+extends ../shared/layout
+block content
+    div(class="fixed-action-btn horizontal click-to-toggle" style="bottom: 45px; right: 24px;")
+        a(class="btn-floating btn-large red modal-trigger" href="#modalNewTheme")
+            i(class="large material-icons") playlist_add
+    .row
+        .section
+            .col.s12.m12
+                .collection.with-header
+                    li.collection-header
+                        h5 Temas
                     each element in themes
-                        a(href= '/subject/#{element.id}' class="btn-large waves-effect waves-light hoverable") !{element.name}
-
-        include create
-        //include newSubject
-        script(src="https://code.jquery.com/jquery-2.1.1.min.js")
-        script(src="/js/materialize.min.js")
-        script.
-            $( document ).ready(function(){
-                $(".button-collapse").sideNav();
-                $('.modal-trigger').leanModal();
-                $('select').material_select();
-            });
-        //script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js")
-        //script(src="/javascripts/controller.js")
+                        a.collection-item(href= '/subject/#{element.id}')
+                            span.title!{element.number}
+                            p !{element.name}
+    include create
+block script
+    script.
+        if("#{error}"){
+            var $toastContent = $('<h6 style="color:#f44336">Error al subir los temas:<span style="color:white">#{error}</span></h6>' );
+            Materialize.toast($toastContent, 10000);
+        }

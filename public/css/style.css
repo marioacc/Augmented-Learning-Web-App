@@ -2,10 +2,9 @@
   height: 64px;
 
 }
-
-
-
-
+.btn{
+  margin: 0 2px;
+}
 .navbar-fixed{
   margin-bottom: 2em;
 }
@@ -13,6 +12,10 @@
   object-fit: cover;
 }
 
-.card .card-image .card-title{
-  color:black;
+.card .card-image .card-title {
+  color: black;
+}
+
+li.collection-header{
+  list-style: none;
 }

@@ -2,7 +2,7 @@ body {
   background-image: url("../../img/background.png");
   background-size: cover; }
 
-form {
+form.login {
   box-shadow: 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.5);
   text-align: center;
   border-radius: 1.5em;
@@ -13,17 +13,17 @@ form {
   margin-top: 5em;
   height: 25em;
   min-width: 23em; }
-  form > div {
+  form.login > div {
     padding-left: 4em;
     padding-right: 4em; }
-  form label {
+  form.login label {
     text-align: left; }
-  form .logo, form label, form button {
+  form.login .logo, form.login label, form.login button {
     margin-top: 2em; }
-  form button {
+  form.login button {
     background-color: #809E3D;
     color: white; }
-    form button:hover {
+    form.login button:hover {
       color: white; }
 
 /*# sourceMappingURL=login.css.map */

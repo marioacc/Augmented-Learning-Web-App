@@ -4,12 +4,16 @@
 var express = require('express');
 var fs = require('fs');
 var path = require('path');
-
+var lineReader = require('line-reader');
 var Converter = require("csvtojson").Converter;
 var router = express.Router();
 var Firebase = require("firebase");
-var ref = new Firebase("https://augmentedlearning.firebaseio.com/");
+var ref = new Firebase("https://augmentedlearning.firebaseio.com");
+//var ref = new Firebase("https://popping-fire-7321.firebaseio.com");
 var themesRef= ref.child("themes");
+var themeNumberRegEx= /(\d+(?:\.\d+)+)|\d+(?!\.)/;
+
+
 router.get("/:subjectId", function(req,res,next) {
   var subjectId = req.params.subjectId;
   var themesRef = ref.child("themes");
@@ -27,66 +31,146 @@ router.get("/:subjectId", function(req,res,next) {
         });
       }
     }
+
     themesList.sort(compareVersionNumbers);
     res.render("themes/index", {
       themes: themesList,
-      subjectId:subjectId
+      subjectId:subjectId,
+      error: req.query.error
     });
 
   });
 });
 
 router.post("/:subjectId", function(req,res,next){
+  var subjectId=req.params.subjectId;
   var converter = new Converter({});
     var fstream;
   req.pipe(req.busboy);
   req.busboy.on('file', function (fieldname, file, filename) {
-
     console.log("Uploading: " + filename);
     fstream = fs.createWriteStream(path.join(__dirname, path.join('/files/',filename)));
     file.pipe(fstream);
     fstream.on('close', function () {
       converter.fromFile(path.join(__dirname, path.join('/files/',filename)),function(error,result){
-
         if (error){
-          console.log(error)
-        }else{
-          var lastThemeNumber="0";
-          var newTheme={};
-          var ThemeAndSubthemes={
-            name: result[0].Nombre,
-            number: result[0].Numero.toString(),
-            subject:req.params.subjectId,
-            subthemes:[]
-          };
+          error="Error:"+error;
+          return res.redirect(req.params.subjectId+"?error="+error);
+
+        }
+        else if (result.length<0){
+          error="El documento esta vacio";
+          return res.redirect(req.params.subjectId+"?error="+error);
+
+        }
+        else if (!result[0].hasOwnProperty("Numero") || !result[0].hasOwnProperty("Nombre")) {
+          error="El nombre de la primera columna debe de ser Numero y el de la segunda conlumna debe de ser Nombre";
+          return res.redirect(req.params.subjectId+"?error="+error);
+
+        }else {
+          result.forEach((theme, i, themeList)=> {
+            if (!themeNumberRegEx.test(theme.Numero) ) {
+              error="El numero "+theme.Numero+" de tema debe terminar siempre con un numero\n" +
+                "Y el nombre de ";
+              return res.redirect(req.params.subjectId+"?error="+error);
+
+            }else if (theme.Nombre.length < 1){
+              error="El nombre de tema no puede estar vacio";
+              return res.redirect(req.params.subjectId+"?error="+error);
+
+
+            }
+          });
+        }
+
+        var lastThemeNumber="0";
+        var newTheme={
+          name:"",
+          number:"",
+          subject:""
+        };
+        var ThemeAndSubthemes={
+          name: result[0].Nombre,
+          number: result[0].Numero.toString(),
+          subject:req.params.subjectId,
+          subthemes:[]
+        };
+
+        themesRef.orderByChild("subject").equalTo(subjectId).once("value",function(datasnapshot){
+          var propertyToSearchInInnerObjects="number";
+          var themes= datasnapshot.val();
+          var isThemeInDatabase;
           for(var index=1; index<result.length;index++){
+            isThemeInDatabase=ObjectInObjectFindProperty(themes,propertyToSearchInInnerObjects,result[index]["Numero"].toString());
             if(result[index].Numero.toString()[0] === ThemeAndSubthemes.number[0]){
               newTheme={
                 name: result[index].Nombre,
                 number: result[index].Numero.toString(),
                 subject:req.params.subjectId
               };
-              ThemeAndSubthemes.subthemes.push(themesRef.push(newTheme).key());
+              if (isThemeInDatabase){
+                themesRef.child(isThemeInDatabase).update({name:newTheme.name});
+              }else{
+                ThemeAndSubthemes.subthemes.push(themesRef.push(newTheme).key());
+              }
+
             }else{
-              themesRef.push(ThemeAndSubthemes);
-              ThemeAndSubthemes={
-                name: result[index].Nombre,
-                number: result[index].Numero.toString(),
-                subject:req.params.subjectId,
-                subthemes:[]
-              };
+              isThemeInDatabase=ObjectInObjectFindProperty(themes,propertyToSearchInInnerObjects,ThemeAndSubthemes.number);
+              if (isThemeInDatabase){
+                ThemeAndSubthemes.subthemes=ThemeAndSubthemes.subthemes.concat(themes[isThemeInDatabase].subthemes);
+                themesRef.child(isThemeInDatabase).update({
+                  name:ThemeAndSubthemes.name,
+                  subthemes:ThemeAndSubthemes.subthemes});
+                ThemeAndSubthemes={
+                  name: result[index].Nombre,
+                  number: result[index].Numero.toString(),
+                  subject:req.params.subjectId,
+                  subthemes:[]
+                };
+              }else {
+                themesRef.push(ThemeAndSubthemes);
+                ThemeAndSubthemes={
+                  name: result[index].Nombre,
+                  number: result[index].Numero.toString(),
+                  subject:req.params.subjectId,
+                  subthemes:[]
+                };
+              }
             }
           }
-          themesRef.push(ThemeAndSubthemes);
-          res.redirect("/theme/"+req.params.subjectId);
-        }
-      });
-    });
+          isThemeInDatabase=ObjectInObjectFindProperty(themes,propertyToSearchInInnerObjects,ThemeAndSubthemes.number);
+          if(isThemeInDatabase){
+            ThemeAndSubthemes.subthemes=ThemeAndSubthemes.subthemes.concat(themes[isThemeInDatabase].subthemes);
+            themesRef.child(isThemeInDatabase).update({
+              name:ThemeAndSubthemes.name,
+              subthemes:ThemeAndSubthemes.subthemes});
+          }else{
+            themesRef.push(ThemeAndSubthemes);
+            ThemeAndSubthemes={
+              name: result[result.length-1].Nombre,
+              number: result[result.length-1].Numero.toString(),
+              subject:req.params.subjectId,
+              subthemes:[]
+            };
+          }
+          fs.unlink(path.join(__dirname, path.join('/files/',filename)), (err)=>{
+            if (err) console.log(err);
+            res.redirect("/theme/"+req.params.subjectId);
+          });
+        })
+      ;})
+    ;});
   });
-
 });
 
-
+var ObjectInObjectFindProperty= function (array,property,value){
+  for (var elementName in array){
+    if (array.hasOwnProperty(elementName) && array[elementName][property]===value){
+      return elementName;
+    }
+  }
+  return false;
+};
 function compareVersionNumbers(v1, v2){
   var v1parts = v1.number.split('.');
   var v2parts = v2.number.split('.');

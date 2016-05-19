@@ -1,0 +1,13 @@
+{
+  "name": "AugmentedLearning",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "marioacc and carla08"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/marioacc/Augmented-Learning-Web-App",
+  "dependencies": {
+    "Materialize": "materialize#^0.97.6"
+  }
+}
