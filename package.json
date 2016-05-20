@@ -24,7 +24,9 @@
     "line-reader": "^0.4.0",
     "morgan": "~1.6.1",
     "node": "^4.2.2",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "jade": "^1.11.0",
+    "express-session": "^1.12.1"
   },
   "repository": {
     "type": "git",
@@ -37,10 +39,10 @@
   },
   "homepage": "https://github.com/marioacc/Augmented-Learning-Web-App#readme",
   "devDependencies": {
-    "express-session": "^1.12.1",
+
     "gulp": "^3.9.0",
     "gulp-nodemon": "^2.0.4",
-    "jade": "^1.11.0",
+
     "jsonwebtoken": "^5.5.4",
     "mongodb": "^2.1.4",
     "mongojs": "^2.3.0",
