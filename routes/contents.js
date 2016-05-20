@@ -78,11 +78,25 @@ router.get("/delete", function (req,res,next){
   var subjectId= req.query.subjectId;
   var themeId= req.query.themeId;
   var subjectRef= ref.child("content").child(contentId);
-  subjectRef.remove().then(function (error){
+  subjectRef.remove(function (error){
     if (error){
       console.log(error.message);
     }else{
-      res.redirect("/content/"+subjectId+"/"+themeId);
+      ref.child("pointer").orderByChild("content").equalTo(contentId).once("value",function(snapshot){
+        var pointer= snapshot.val();
+        if (pointer && pointer[Object.keys(pointer)[0]].content===contentId) {
+          ref.child("pointer").child(Object.keys(pointer)[0]).remove(function (error) {
+
+              res.redirect("/content/" + subjectId + "/" + themeId);
+
+          });
+        }else{
+          res.redirect("/content/"+subjectId+"/"+themeId);
+        }
+
+
+      });
+
     }
   });
 });

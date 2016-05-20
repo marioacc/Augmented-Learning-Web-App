@@ -5,24 +5,24 @@ var Firebase = require("firebase");
 var ref = new Firebase("https://popping-fire-7321.firebaseio.com/");
 var userRef =ref.child("user");
 router.use("/",function(req, res, next){
-
+    var session= req.session;
   if (ref.getAuth()){
-    if (!req.app.get("user")){
+    if (!session.user){
         userRef.child(ref.getAuth().uid).once("value",function(user){
-            req.app.set("user",JSON.stringify(user.val()));
+            session.user=JSON.stringify(user.val());
             req.path ==="/" ? res.redirect("/subject") : next();
         });
     }else{
       req.path ==="/" ? res.redirect("/subject") : next();
     }
-  }else if (req.cookies.token) {
-    ref.authWithCustomToken(req.cookies.token, function(error, authData){
+  }else if (session.token) {
+    ref.authWithCustomToken(session.token, function(error, authData){
       if (error) {
         res.send(JSON.stringify(error));
       } else {
-        if (!req.app.get("user")){
+        if (!session.user){
             userRef.child(ref.getAuth().uid).once("value",function(user){
-                req.app.set("user",JSON.stringify(user.val()));
+                session.user=JSON.stringify(user.val());
                 req.path ==="/" ? res.redirect("/subject") : next();
             });
         }
@@ -45,11 +45,11 @@ router.post("/login", function(req, res, next){
     if (error) {
       res.send(JSON.stringify(error));
     } else {
-
+        var session= req.session;
         userIdRef=userRef.child(authData.uid);
         userIdRef.once("value", function (userData){
-        req.app.set("user",JSON.stringify(userData.val()));
-        res.cookie("token",authData.token);
+            session.user=JSON.stringify(userData.val());
+            session.token="token",authData.token;
         if (req.path === "/login") {
           res.redirect("/subject");
         } else {
@@ -61,7 +61,58 @@ router.post("/login", function(req, res, next){
 });
 
 router.get("/logout", function (req,res,next){
-    
+    req.session.destroy();
+    ref.unauth();
+    res.redirect("/");
 });
+
+
+router.get('/loginUnity', function(req, res, next) {
+    var email= req.query.username;
+    var password= req.query.password;
+    ref.authWithPassword({
+        email:email,
+        password: password
+    },function(error, authData){
+        if (error) {
+            res.send(null);
+        } else {
+            // var session= req.session;
+            var userIdRef=userRef.child(authData.uid);
+            userIdRef.once("value", function (userData){
+                res.json({
+                    authData:authData,
+                    user:userData.val()
+                });
+
+            });
+        }
+    });
+});
+
+
+router.get('/loginUnity', function(req, res, next) {
+    var email= req.query.username;
+    var password= req.query.password;
+    ref.authWithPassword({
+        email:email,
+        password: password
+    },function(error, authData){
+        if (error) {
+            res.send(null);
+        } else {
+            // var session= req.session;
+            var userIdRef=userRef.child(authData.uid);
+            userIdRef.once("value", function (userData){
+                res.json({
+                    authData:authData,
+                    user:userData.val()
+                });
+
+            });
+        }
+    });
+});
+
 
 module.exports = router;

@@ -3,7 +3,7 @@ div(id="modalSelectPointer" class="modal")
         .row
             form(action="/pointer/new/"+subjectId+"/"+themeId method="post")
                 div(class="input-field col s12")
-                    select(value="" name="contentId" class="")
+                    select(value="" name="contentId" class="" required)
                         option(disabled selected=typeof(selectedPointer) === 'undefined') Seleccionar un puntero
                         each content in contentList
                             option(value=content.contentId selected=content.contentId === selectedPointer) #{content.contentData.name}

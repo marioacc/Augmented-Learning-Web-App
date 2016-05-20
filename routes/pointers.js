@@ -14,12 +14,7 @@ router.post("/new/:subjectId/:themeId", function(req,res,next){
   var themeId=req.params.themeId;
   var refPointer = ref.child("pointer");
   refPointer.orderByChild("subject").equalTo(subjectId).once("value", function(snapshot){
-    if (!snapshot.exists()){
-      refPointer.push({
-        content:"test bitch",
-        subject: subjectId
-      });
-    }else{
+    
       for(var pointerId  in snapshot.val()){
         if (snapshot.val().hasOwnProperty(pointerId)){
           refPointer.child(pointerId).update({
@@ -28,7 +23,7 @@ router.post("/new/:subjectId/:themeId", function(req,res,next){
           break;
         }
       }
-    }
+
     res.redirect("/content/"+subjectId+"/"+themeId);
   });
 
