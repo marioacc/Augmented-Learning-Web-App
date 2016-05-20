@@ -15,7 +15,7 @@ var contents= require("./routes/contents");
 var themes= require ("./routes/themes");
 
 var session= require("express-session");
-var passport = require('passport');
+
 var app = express();
 
 
