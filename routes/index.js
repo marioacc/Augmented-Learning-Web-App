@@ -43,7 +43,7 @@ router.post("/login", function(req, res, next){
     password: password
   },function(error, authData){
     if (error) {
-      res.send(JSON.stringify(error));
+      res.render("index",{error:"Contraseña o usuario invalido"});
     } else {
         var session= req.session;
         userIdRef=userRef.child(authData.uid);

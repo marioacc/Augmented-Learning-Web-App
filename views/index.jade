@@ -8,3 +8,9 @@ block content
       label(for="password") Contraseña
       input(type="password" id="password" name="password" class="u-max-full-width")
       button(type="submit" value="submit" class="btn light-green ") Ingresar
+block script
+  script.
+    if ("#{error}") {
+      var $toastContent = $('<h6 style="color:#f44336">Error al iniciar sesión:<span style="color:white">#{error}</span></h6>');
+      Materialize.toast($toastContent, 10000);
+    }
