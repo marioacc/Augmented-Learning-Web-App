@@ -64,33 +64,6 @@ router.get('/', function(req, res, next) {
 
 });
 
-router.get("/:subjectId", function(req,res,next){
-  var subjectId=req.params.subjectId;
-  var subjectRef= ref.child("subject").child(subjectId);
-  var contentRef= ref.child("content");
-  var subjectData;
-  subjectRef.once("value", function (snapshot){
-    subjectData = snapshot.val();
-    contentRef.once("value", function (snapshot) {
-      var contentList=[];
-      var contentData= snapshot.val();
-      for (var contentId in contentData){
-        if(contentData.hasOwnProperty(contentId)){
-          if (contentData[contentId].subject === subjectId){
-            contentList.push({
-              contentData:contentData[contentId],
-              contentId:contentId
-            });
-          }
-        }
-      }
-      res.render("subjects/subjectContent",{
-        contentList:contentList,
-        subjectId: subjectId
-      });
-    });
-  });
-});
 
 router.post("/new/:userId", function(req,res,next){
   var userId= req.params.userId;

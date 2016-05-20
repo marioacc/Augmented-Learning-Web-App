@@ -3,18 +3,18 @@
 div(id="modalNewContent" class="modal")
     div(class="modal-content")
         .row
-            form(action="/content/new/"+subjectId method="post" class="col s12")
+            form(action="/content/new/"+subjectId+"/"+themeId method="post" class="col s12")
                 h5 Crear Contenido
                 .row
                     div(class="input-field col s6")
                         label(for="name") Nombre del contenido
-                        input(id="name" type="text" class="validate" name="name")
+                        input(id="name" type="text" class="validate" name="name" required)
                     div(class="input-field col s6")
                         label(for="description") Descripción
-                        input(id="description" type="text" class="validate" name="description")
+                        input(id="description" type="text" class="validate" name="description" required)
                     div(class="input-field col s6")
                         label(for="url") Direccion del contenido
-                        input(type="text" id="url" name="url")
-                button(class="btn waves-effect waves-light" type="submit" name="action") Agregar
+                        input(type="url" id="url" name="url" required)
+                button(class="btn waves-effect waves-light" type="submit" name="action" required) Agregar
                     i(class="material-icons right") send
 

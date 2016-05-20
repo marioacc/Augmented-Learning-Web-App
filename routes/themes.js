@@ -42,6 +42,29 @@ router.get("/:subjectId", function(req,res,next) {
   });
 });
 
+router.get("/delete/:subjectId/:themeId",function(req,res,next){
+  var themeId=req.params.themeId;
+  var subjectId= req.params.subjectId;
+  var contentsRef= ref.child("content");
+  contentsRef.orderByChild("theme").equalTo(themeId).once("value",function(snapshot){
+    var contents = snapshot.val();
+    for(var contentId  in contents){
+      if (contents.hasOwnProperty(contentId)){
+        contentsRef.child(contentId).remove().then(function(){
+
+        },function(err){
+          res.redirect("/content/"+subjectId+"/"+themeId);
+          return;
+        });
+      }
+    }
+    themesRef.child(themeId).remove().then(function(){
+      res.redirect("/theme/"+subjectId);
+    },function(error){
+      res.redirect("/content/"+subjectId+"/"+themeId);
+    });
+  });
+});
 router.post("/:subjectId", function(req,res,next){
   var subjectId=req.params.subjectId;
   var converter = new Converter({});
@@ -55,32 +78,34 @@ router.post("/:subjectId", function(req,res,next){
       converter.fromFile(path.join(__dirname, path.join('/files/',filename)),function(error,result){
         if (error){
           error="Error:"+error;
-          return res.redirect(req.params.subjectId+"?error="+error);
-
+          res.redirect(req.params.subjectId+"?error="+error);
+          return;
         }
         else if (result.length<0){
           error="El documento esta vacio";
-          return res.redirect(req.params.subjectId+"?error="+error);
+           res.redirect(req.params.subjectId+"?error="+error);
+          return;
 
         }
         else if (!result[0].hasOwnProperty("Numero") || !result[0].hasOwnProperty("Nombre")) {
           error="El nombre de la primera columna debe de ser Numero y el de la segunda conlumna debe de ser Nombre";
-          return res.redirect(req.params.subjectId+"?error="+error);
-
+          res.redirect(req.params.subjectId+"?error="+error);
+          return;
         }else {
-          result.forEach((theme, i, themeList)=> {
+          for (var i=0; i<result.length;i++){
+            var theme=result[i];
             if (!themeNumberRegEx.test(theme.Numero) ) {
-              error="El numero "+theme.Numero+" de tema debe terminar siempre con un numero\n" +
-                "Y el nombre de ";
-              return res.redirect(req.params.subjectId+"?error="+error);
-
-            }else if (theme.Nombre.length < 1){
+              error="El numero "+theme.Numero+" no puede estar vacio, y debe de empezar con un numero y terminar con un numero";
+              res.redirect(req.params.subjectId+"?error="+error);
+              return;
+            }else if (theme.Nombre===undefined || theme.Nombre.length < 1){
               error="El nombre de tema no puede estar vacio";
-              return res.redirect(req.params.subjectId+"?error="+error);
-
-
+              res.redirect(req.params.subjectId+"?error="+error);
+              return;
             }
-          });
+          }
+
+
         }
 
         var lastThemeNumber="0";

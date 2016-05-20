@@ -6,13 +6,13 @@ block content
             .row
                 div(class="input-field col s6")
                     label(for="name") Nombre del contenido
-                    input(id="name" type="text" class="validate" name="name" value=name)
+                    input(id="name" type="text" class="validate" name="name" value=name required)
                 div(class="input-field col s6")
                     label(for="description") Descripción
-                    input(id="description" type="text" class="validate" name="description" value=description)
+                    input(id="description" type="text" class="validate" name="description" value=description required)
                 div(class="input-field col s6")
                     label(for="url") Direccion del contenido
-                    input(type="text" id="url" name="url" value=content)
+                    input(type="url" id="url" name="url" value=content required)
             button(class="btn waves-effect waves-light" type="submit" name="action") Actualizar
                 i(class="material-icons right") send
             div(class="col s12")

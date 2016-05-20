@@ -10,7 +10,7 @@ block content
                     li.collection-header
                         h5 Temas
                     each element in themes
-                        a.collection-item(href= '/subject/#{element.id}')
+                        a.collection-item(href= '/content/#{subjectId}/#{element.id}')
                             span.title!{element.number}
                             p !{element.name}
     include create

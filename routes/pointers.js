@@ -4,12 +4,14 @@
 var express = require('express');
 var router = express.Router();
 var Firebase = require("firebase");
-var ref = new Firebase("https://popping-fire-7321.firebaseio.com/");
+//var ref = new Firebase("https://popping-fire-7321.firebaseio.com/");
+var ref = new Firebase("https://augmentedlearning.firebaseio.com");
 var userRef =ref.child("user");
 
-router.post("/new/:subjectId", function(req,res,next){
+router.post("/new/:subjectId/:themeId", function(req,res,next){
   var contentId = req.body.contentId;
   var subjectId= req.params.subjectId;
+  var themeId=req.params.themeId;
   var refPointer = ref.child("pointer");
   refPointer.orderByChild("subject").equalTo(subjectId).once("value", function(snapshot){
     if (!snapshot.exists()){
@@ -27,7 +29,7 @@ router.post("/new/:subjectId", function(req,res,next){
         }
       }
     }
-    res.redirect("/subject/"+subjectId);
+    res.redirect("/content/"+subjectId+"/"+themeId);
   });
 
 });

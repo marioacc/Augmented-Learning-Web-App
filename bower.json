@@ -8,6 +8,8 @@
   "license": "ISC",
   "homepage": "https://github.com/marioacc/Augmented-Learning-Web-App",
   "dependencies": {
-    "Materialize": "materialize#^0.97.6"
+    "Materialize": "materialize#^0.97.6",
+    "bootstrap": "^3.3.6",
+    "components-font-awesome": "^4.6.3"
   }
 }

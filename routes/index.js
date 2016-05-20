@@ -60,4 +60,8 @@ router.post("/login", function(req, res, next){
   });
 });
 
+router.get("/logout", function (req,res,next){
+    
+});
+
 module.exports = router;
