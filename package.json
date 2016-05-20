@@ -27,6 +27,7 @@
     "serve-favicon": "~2.3.0",
     "jade": "^1.11.0",
     "express-session": "^1.12.1"
+
   },
   "repository": {
     "type": "git",
