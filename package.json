@@ -1,6 +1,9 @@
 {
   "name": "AugmentedLearning",
   "version": "0.0.0",
+  "engines": {
+    "node": "4.2.2"
+  },
   "private": true,
   "main": "app.js",
   "scripts": {
